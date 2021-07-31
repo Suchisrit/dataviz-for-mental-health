@@ -66,7 +66,7 @@ df2['Code'] = df2['Location'].astype('category').map({
     'Belarus': 'BLR', 
     'Belize': 'BLZ', 
     'Bermuda': 'BMU', 
-    'Bolivia, Plurinational State of': 'BOL', 
+    'Bolivia (Plurinational State of)': 'BOL', 
     'Brazil': 'BRA', 
     'Barbados': 'BRB', 
     'Brunei Darussalam': 'BRN', 
@@ -81,7 +81,7 @@ df2['Code'] = df2['Location'].astype('category').map({
     'China': 'CHN', 
     'Côte d\'Ivoire': 'CIV', 
     'Cameroon': 'CMR', 
-    'Democratic Republic of Congo': 'COD', 
+    'Democratic Republic of the Congo': 'COD', 
     'Congo': 'COG', 
     'Cook Islands': 'COK', 
     'Colombia': 'COL', 
@@ -143,7 +143,7 @@ df2['Code'] = df2['Location'].astype('category').map({
     'India': 'IND', 
     'British Indian Ocean Territory': 'IOT', 
     'Ireland': 'IRL', 
-    'Iran, Islamic Republic of': 'IRN', 
+    'Iran (Islamic Republic of)': 'IRN', 
     'Iraq': 'IRQ', 
     'Iceland': 'ISL', 
     'Israel': 'ISR', 
@@ -155,15 +155,15 @@ df2['Code'] = df2['Location'].astype('category').map({
     'Kazakhstan': 'KAZ', 
     'Kenya': 'KEN', 
     'Kyrgyzstan': 'KGZ', 
-    'Laos': 'LAO',
+    'Lao People\'s Democratic Republic': 'LAO',
     'Cambodia': 'KHM', 
     'Kiribati': 'KIR', 
     'Saint Kitts and Nevis': 'KNA', 
-    'South Korea': 'KOR', 
+    'Republic of Korea': 'KOR', 
     'Kuwait': 'KWT', 
     'Lebanon': 'LBN', 
     'Liberia': 'LBR', 
-    'Libyan Arab Jamahiriya': 'LBY', 
+    'Libya': 'LBY', 
     'Saint Lucia': 'LCA', 
     'Liechtenstein': 'LIE', 
     'Sri Lanka': 'LKA', 
@@ -217,7 +217,7 @@ df2['Code'] = df2['Location'].astype('category').map({
     'Papua New Guinea': 'PNG', 
     'Poland': 'POL', 
     'Puerto Rico': 'PRI', 
-    'North Korea': 'PRK', 
+    'Dem. People\'s Republic of Korea': 'PRK', 
     'Portugal': 'PRT', 
     'Paraguay': 'PRY', 
     'Palestine': 'PSE', 
@@ -264,7 +264,7 @@ df2['Code'] = df2['Location'].astype('category').map({
     'Turkey': 'TUR', 
     'Tuvalu': 'TUV', 
     'Taiwan': 'TWN', 
-    'Tanzania': 'TZA', 
+    'United Republic of Tanzania': 'TZA', 
     'Uganda': 'UGA', 
     'Ukraine': 'UKR', 
     'United States Minor Outlying Islands': 'UMI', 
@@ -273,7 +273,7 @@ df2['Code'] = df2['Location'].astype('category').map({
     'Uzbekistan': 'UZB', 
     'Holy See (Vatican City State)': 'VAT', 
     'Saint Vincent and the Grenadines': 'VCT', 
-    'Venezuela': 'VEN', 
+    'Venezuela (Bolivarian Republic of)': 'VEN', 
     'Virgin Islands, British': 'VGB', 
     'United States Virgin Islands': 'VIR', 
     'Vietnam': 'VNM', 
@@ -288,9 +288,6 @@ df2['Code'] = df2['Location'].astype('category').map({
 
 
 df2["population"] = df2["PopTotal"] * 1000
-print("LENGTH: ", len(df2))
-for index, i in enumerate(df2["Code"]):
-    print(index, i)
 
 frames = []
 
@@ -299,11 +296,10 @@ for theYear in [1990, 1991, 1992, 1993, 1994, 1995, 1996, 1997, 1998, 1999, 2000
     blank = []
     yearlyDF = df[df['Year']==theYear]
     yearlyDF2 = df2[df2['Time']==theYear]
-    print(yearlyDF["Code"])
     for i in yearlyDF["Code"]:
         for index in yearlyDF2.index:
             if i == yearlyDF2['Code'][index]:
-                blank.append(yearlyDF2['PopTotal'][index])
+                blank.append(yearlyDF2['population'][index])
                 break
 
     yearlyDF["totalPop"] = blank
@@ -312,6 +308,7 @@ for theYear in [1990, 1991, 1992, 1993, 1994, 1995, 1996, 1997, 1998, 1999, 2000
 print("SUCCESS")
 result = pd.concat(frames)
 result["percentage"] = (result["Prevalence - Mental health disorders: Both (Number)"] / result["totalPop"]) * 100
+print(result.head())
 
 '''
 fig = go.Figure(data=go.Choropleth(
@@ -393,16 +390,19 @@ def update_figure(selected_year):
     
         locations = filtered_df['Code'],
         z = filtered_df['percentage'],
-        text = filtered_df['Entity'],
-        colorscale = [[0, '#df6d7a'], [0.05, '#D3394C'], [0.1, '#AF2D46'], [0.15, '#8B2444'], [0.2, '#722040'], [0.25, '#6A1C48'], [1, 'purple']],
+        text = ['Country: {} <br>Disorder Count: {} <br>Total Population: {}'.format(filtered_df["Entity"][i], int(filtered_df['Prevalence - Mental health disorders: Both (Number)'][i]), int(filtered_df['totalPop'][i])) for i in filtered_df.index],
+        colorscale = [[0, '#df6d7a'], [0.2, '#D3394C'], [0.3, '#AF2D46'], [0.5, '#8B2444'], [0.8, '#722040'], [1, '#6A1C48']],
         autocolorscale=False,
         reversescale=False,
-        # zmax=10**8,
-        # zmin=0,
+        zmax=26,
+        zmin=0,
         marker_line_color='darkgray',
         marker_line_width=0.5,
-        colorbar_ticksuffix = '',
-        colorbar_title = 'Amount of People',
+        colorbar_ticksuffix = '%',
+        colorbar_title = 'Percentage of Population',
+        hovertemplate = 
+            '<b>%{z:.2f}%</b>' +
+            '<br>%{text}'
     ))
     #(data, x="Sex", y="2016", color="Country")#, range_y=[0, 8000000], color_continuous_scale=["blue", "green", "purple"])
 
@@ -415,9 +415,10 @@ def update_figure(selected_year):
         autosize=False,
         width=1300,
         height=800,
-        transition_duration=1500
+        transition_duration=1500,
 
     )
+
 
     return fig
 
