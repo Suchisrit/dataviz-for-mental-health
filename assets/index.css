@@ -1,0 +1,43 @@
+body {
+    background-color: #B0CEEB;
+    color: black;
+}
+
+.header {
+    margin-left: 20px;
+    margin-top: 20px;
+    font-weight: bold;
+    margin-bottom: -2em;
+}
+
+.subhead {
+    color: blue;
+}
+
+.hero_img {
+    width: 35em;
+    height: 35em;
+}
+
+.pre-bold-header {
+    font-size: 3em;
+    margin: 0;
+}
+
+.post-bold-header {
+    font-weight: 800;
+    font-size: 3em;
+    margin: 0;
+}
+
+.left-side-hero {
+    margin: auto;
+    max-width: 17em;
+}
+
+.hero {
+    display: flex;
+    justify-content: space-between;
+    margin-right: 5em;
+    margin-left: 3em;
+}
