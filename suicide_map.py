@@ -225,7 +225,7 @@ df2['Code'] = df2['Location'].astype('category').map({
     'Qatar': 'QAT', 
     'Réunion': 'REU', 
     'Romania': 'ROU', 
-    'Russia': 'RUS', 
+    'Russian Federation': 'RUS', 
     'Rwanda': 'RWA', 
     'Saudi Arabia': 'SAU', 
     'South Sudan': 'SSD', 
@@ -269,7 +269,7 @@ df2['Code'] = df2['Location'].astype('category').map({
     'Ukraine': 'UKR', 
     'United States Minor Outlying Islands': 'UMI', 
     'Uruguay': 'URY', 
-    'United States': 'USA', 
+    'United States of America': 'USA', 
     'Uzbekistan': 'UZB', 
     'Holy See (Vatican City State)': 'VAT', 
     'Saint Vincent and the Grenadines': 'VCT', 
@@ -288,6 +288,9 @@ df2['Code'] = df2['Location'].astype('category').map({
 
 
 df2["population"] = df2["PopTotal"] * 1000
+print("LENGTH: ", len(df2))
+for index, i in enumerate(df2["Code"]):
+    print(index, i)
 
 frames = []
 
@@ -295,12 +298,9 @@ for theYear in [1990, 1991, 1992, 1993, 1994, 1995, 1996, 1997, 1998, 1999, 2000
     print(theYear)
     blank = []
     yearlyDF = df[df['Year']==theYear]
-    for i in yearlyDF['Entity']:
-        print('country: ', i)
     yearlyDF2 = df2[df2['Time']==theYear]
     print(yearlyDF["Code"])
     for i in yearlyDF["Code"]:
-        print('i: ', i)
         for index in yearlyDF2.index:
             if i == yearlyDF2['Code'][index]:
                 blank.append(yearlyDF2['PopTotal'][index])
