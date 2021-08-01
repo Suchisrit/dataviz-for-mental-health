@@ -1,5 +1,8 @@
+@import url('https://fonts.googleapis.com/css2?family=Lato:wght@400;700&display=swap');
+
 body {
-    background-color: #B0CEEB;
+    background-color: #a9d5fd;
+    font-family: 'Lato', sans-serif;
     color: black;
 }
 
@@ -7,7 +10,7 @@ body {
     margin-left: 20px;
     margin-top: 20px;
     font-weight: bold;
-    margin-bottom: -2em;
+    margin-bottom: -4em;
 }
 
 .subhead {
@@ -15,8 +18,8 @@ body {
 }
 
 .hero_img {
-    width: 43em;
-    height: 43em;
+    width: 39em;
+    height: 39em;
 }
 
 .pre-bold-header {

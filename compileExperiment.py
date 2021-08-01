@@ -46,15 +46,34 @@ neverAll['percentage'] = neverAll['treatment'].astype('category').map({"Yes":"{}
 frames = [neverAll, rarelyAll, sometimesAll, oftenAll]
 result = pd.concat(frames)
 
-fig = px.bar(result, x="work_interfere", color="treatment", range_y=[0, 501], category_orders={"work_interfere":["Never", "Rarely", "Sometimes", "Often"], "treatment":["Yes", "No"]}, hover_name='percentage', color_discrete_sequence=["#004DA1", "#F5A627"], labels={"work_interfere": "Frequency of Negative Mental Health Condition Effects", "count": "Amount of People", "treatment": "Did the individual<br>seek treatment?"})
+fig = px.bar(
+    result, 
+    x="work_interfere", 
+    color="treatment", 
+    range_y=[0, 501], 
+    category_orders={
+        "work_interfere":["Never", "Rarely", "Sometimes", "Often"], 
+        "treatment":["Yes", "No"],
+    }, 
+    hover_name='percentage', 
+    color_discrete_sequence=["#004DA1", "#F5A627"], 
+    labels={"work_interfere": "Frequency of Negative Mental Health Condition Effects", "treatment": "Did the individual<br>seek treatment?"},
+    hover_data=["work_interfere", "treatment", "percentage"],
+)
 
 fig.update_layout(
-    # plot_bgcolor='white',
-    # paper_bgcolor='white',
+    plot_bgcolor='white',
+    # paper_bgcolor='#a9d5fd',
     barmode='stack',
 )
 
 fig.update_traces(
+    go.Bar(
+        hovertemplate = 
+            '%{customdata[1]}' + 
+            '<br>Frequency of Negative Mental Health Condition Effects: %{x}' +
+            '<br>Did the individual seek treatment?: %{customdata[0]}'
+    ),
     marker_line_width=0,
 )
 
@@ -66,44 +85,64 @@ fig.update_traces(
 
 data_path2  = "Mental Health Data.csv"
 
-dfSTI = pd.read_csv(data_path2)
+dfSTI = pd.read_csv(data_path2)[:1100]
 
-dfSTI['Would you be willing to share with you friends and family that you have a mental illness?'] = dfSTI['How willing would you be to share with friends and family that you have a mental illness?'].astype('category').map({
-    "Somewhat open":"Probably",
-    "Very open":"Yes",
-    "Somewhat not open":"Probably not",
-    "Neutral":"Neutral",
-    "Not open at all":"No",
-    "Not applicable to me (I do not have a mental illness)":"N/A"
-})
+# dfSTI['Would you be willing to share with you friends and family that you have a mental illness?'] = dfSTI['How willing would you be to share with friends and family that you have a mental illness?'].astype('category').map({
+#     "Somewhat open":"Probably",
+#     "Very open":"Yes",
+#     "Somewhat not open":"Likely not",
+#     "Neutral":"Neutral",
+#     "Not open at all":"No",
+#     "Not applicable to me (I do not have a mental illness)":"N/A"
+# })
+
+# fig2 = px.sunburst(
+#     dfSTI,
+#     path=['Do you currently have a mental health disorder?', 'Would you be willing to share with you friends and family that you have a mental illness?'],
+#     color='Do you currently have a mental health disorder?',
+#     color_discrete_sequence=['#004DA1', '#CEE5F6', '#F5A627'],
+#     maxdepth=-1,
+#     hover_data=['Do you currently have a mental health disorder?', 'Would you be willing to share with you friends and family that you have a mental illness?'],
+#     branchvalues="total",
+# )
+
+# sizes = [35, 18, 18, 18, 35, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 50, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18]
+
+# fig2.update_traces(
+#     go.Sunburst(
+#         hovertemplate = 
+#             'Would you be willing to share with you friends and family that you have a mental illness? : <b>%{customdata[1]}</b>' + 
+#             '<br>Count: <b>%{value}</b>'
+#     ),
+#     insidetextorientation='radial',
+#     insidetextfont = dict(size=sizes)
+# )
+
+sizes = [18, 18, 18, 18, 18, 18, 35, 35, 18, 18, 18, 20]
 
 fig2 = px.sunburst(
     dfSTI,
-    path=['Do you currently have a mental health disorder?', 'Would you be willing to share with you friends and family that you have a mental illness?'],
-    labels={'Do you currently have a mental health disorder?': 'Do you currently have a mental health disorder?'},
+    path=['Do you currently have a mental health disorder?', 'Has your employer ever formally discussed mental health (for example, as part of a wellness campaign or other official communication)?'],
     color='Do you currently have a mental health disorder?',
-    color_discrete_sequence=['rgb(213, 102, 100)', 'rgb(11, 20, 20)', 'rgb(102, 123, 0)'],
+    color_discrete_sequence=['#004DA1', '#CEE5F6', '#F5A627'],
     maxdepth=-1,
-    hover_data=['Do you currently have a mental health disorder?', 'Would you be willing to share with you friends and family that you have a mental illness?'],
-    branchvalues="remainder",
+    hover_data=['Do you currently have a mental health disorder?', 'Has your employer ever formally discussed mental health (for example, as part of a wellness campaign or other official communication)?'],
+    branchvalues="total",
 )
-
-sizes = [35, 20, 20, 20, 50, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 50, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20]
 
 fig2.update_traces(
     go.Sunburst(
-
         hovertemplate = 
-            'Would you be willing to share with you friends and family that you have a mental illness? : %{customdata[1]}' + 
-            '<br>Count: %{value}'
+            'Has your employer ever formally discussed mental health (for example, as part of a wellness campaign or other official communication)? : <b>%{customdata[1]}</b>' + 
+            '<br>Count: <b>%{value}</b>'
     ),
+    insidetextorientation='radial',
     insidetextfont = dict(size=sizes)
 )
 
+
 fig2.update_layout(
-    autosize=False,
-    width=1000,
-    height=600,
+    margin=dict(t=40, r=0, l=0, b=0),
 )
 
 
@@ -412,7 +451,7 @@ encoded_image = base64.b64encode(open(image_filename, 'rb').read())
 
 app.layout = html.Div(children=[
 
-    html.H5(children='Data Viz for Mental Health', className="header"),
+    html.H6(children='Data Viz for Mental Health', className="header"),
 
     html.Div([
         html.Div([
@@ -461,10 +500,11 @@ app.layout = html.Div(children=[
             html.P(children='Our next visualization utilizes survey data to take a closer look at the stigma surrounding mental health. The most common response tot he question blah', className="section-info"),
         ]),
         html.Hr(className='transition-mini-hr'),
-        html.P(children='Yeet', className="section-info"),
+        html.P(children='Click on the graph\'s responses to zoom in on a section of responses!', className="section-info"),
 
         html.Div([
             html.H5(children='Do you currently have a mental health disorder?'),
+            html.H6(children='Would you be willing to share with you friends and family that you have a mental illness?'),
             dcc.Graph(
                 id='graph2',
                 figure=fig2
@@ -513,7 +553,8 @@ def update_figure(selected_year):
         locations = filtered_df['Code'],
         z = filtered_df['percentage'],
         text = ['Country: {} <br>Disorder Count: {} <br>Total Population: {}'.format(filtered_df["Entity"][i], int(filtered_df['Prevalence - Mental health disorders: Both (Number)'][i]), int(filtered_df['totalPop'][i])) for i in filtered_df.index],
-        colorscale = [[0, "green"], [0.4, "green"], [0.6, "yellow"], [1, "yellow"]],
+        colorscale = [[0, "#2262A7"], [0.4, "#2262A7"], [0.6, "#FDFC96"], [1, "#FDFC96"]],
+        # colorscale = [[0, "#2262A7"], [0.3, "#729AA1"], [0.8, "#B4C99C"], [1, "#FDFC96"]],
         autocolorscale=False,
         reversescale=False,
         zmax=26,
@@ -533,9 +574,6 @@ def update_figure(selected_year):
             showcoastlines=False,
             projection_type='equirectangular'
         ),
-        autosize=False,
-        width=970,
-        height=500,
         transition_duration=1500,
         margin=dict(t=0, r=0, l=0, b=0)
     )
