@@ -33,8 +33,8 @@ Do not underestimate the messiness of real world datasets.
 
 ## Screenshots
 
-![viz-1](https://github.com/antz22/montycsc-website/blob/master/screenshots/viz-1.png)
+![viz-1](https://github.com/Suchisrit/dataviz-for-mental-health/blob/master/screenshots/viz-1.png)
 
-![viz-2](https://github.com/antz22/montycsc-website/blob/master/screenshots/viz-2.png)
+![viz-2](https://github.com/Suchisrit/dataviz-for-mental-health/blob/master/screenshots/viz-2.png)
 
-![viz-3](https://github.com/antz22/montycsc-website/blob/master/screenshots/viz-3.png)
+![viz-3](https://github.com/Suchisrit/dataviz-for-mental-health/blob/master/screenshots/viz-3.png)
