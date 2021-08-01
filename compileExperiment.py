@@ -1,29 +1,190 @@
-# -*- coding: utf-8 -*-
-
-# Run this app with `python app.py` and
-# visit http://127.0.0.1:8050/ in your web browser.
-
 import dash
 import dash_core_components as dcc
 import dash_html_components as html
-import plotly.express as px
-import pandas as pd
-import plotly.graph_objects as go
-import numpy as np
 from dash.dependencies import Input, Output
+import pandas as pd
+import plotly.express as px
+import plotly.graph_objects as go
 
 external_stylesheets = ['https://codepen.io/chriddyp/pen/bWLwgP.css']
 
 app = dash.Dash(__name__, external_stylesheets=external_stylesheets)
 
+# assume you have a "long-form" data frame
+# see https://plotly.com/python/px-arguments/ for more options
 colors = {
-    'background': '#ffffff',
-    'text': '#7FDBFF'
+    'background': '#47003e',
+    'text': '#df0170'
 }
 
-data_path  = "people-with-mental-health-disorders copy.csv"
 
-df = pd.read_csv(data_path)
+data_path  = "survey.csv"
+data = pd.read_csv(data_path)
+
+oftenAll = data[data['work_interfere']=='Often']
+oftenYes = oftenAll[oftenAll['treatment']=='Yes']
+oftenPercent = (len(oftenYes) / len(oftenAll))
+oftenAll['percentage'] = oftenAll['treatment'].astype('category').map({"Yes":"{}%".format(round(oftenPercent*100)), "No":"{}%".format(round((1-oftenPercent)*100))})
+
+sometimesAll = data[data['work_interfere']=='Sometimes']
+sometimesYes = sometimesAll[sometimesAll['treatment']=='Yes']
+sometimesPercent = (len(sometimesYes) / len(sometimesAll))
+sometimesAll['percentage'] = sometimesAll['treatment'].astype('category').map({"Yes":"{}%".format(round(sometimesPercent*100)), "No":"{}%".format(round((1-sometimesPercent)*100))})
+
+rarelyAll = data[data['work_interfere']=='Rarely']
+rarelyYes = rarelyAll[rarelyAll['treatment']=='Yes']
+rarelyPercent = (len(rarelyYes) / len(rarelyAll))
+rarelyAll['percentage'] = rarelyAll['treatment'].astype('category').map({"Yes":"{}%".format(round(rarelyPercent*100)), "No":"{}%".format(round((1-rarelyPercent)*100))})
+
+neverAll = data[data['work_interfere']=='Never']
+neverYes = neverAll[neverAll['treatment']=='Yes']
+neverPercent = (len(neverYes) / len(neverAll))
+neverAll['percentage'] = neverAll['treatment'].astype('category').map({"Yes":"{}%".format(round(neverPercent*100)), "No":"{}%".format(round((1-neverPercent)*100))})
+
+frames = [neverAll, rarelyAll, sometimesAll, oftenAll]
+result = pd.concat(frames)
+
+# data['Severity'] = data['work_interfere'].astype('category').map({"Never":0, "Rarely":1, "Sometimes":2, "Often":3})
+
+#fig = px.bar(data, x="Severity", color="treatment", range_x=[0, 3], )
+fig = px.bar(result, x="work_interfere", color="treatment", range_y=[0, 501], category_orders={"work_interfere":["Never", "Rarely", "Sometimes", "Often"], "treatment":["Yes", "No"]}, hover_name='percentage', color_discrete_sequence=["rgb(116, 1, 223)", "rgb(223, 1, 46)"], labels={"work_interfere": "Frequency of Negative Mental Health Condition Effects", "count": "Amount of People", "treatment": "Did the individual<br>seek treatment?"})
+'''
+x = data['work_interfere']
+
+
+fig = go.Figure(go.Bar(x=x, y=[len(often)], name='Yes'))
+fig.add_trace(go.Bar(x=x, y=data[data['treatment']=='No'], name='No'))
+
+fig.update_layout(barmode='stack')
+fig.update_xaxes(categoryorder='category ascending')
+'''
+
+fig.update_layout(
+    plot_bgcolor=colors['background'],
+    paper_bgcolor=colors['background'],
+    font_color=colors['text'],
+    barmode='stack',
+)
+
+fig.update_traces(
+    marker_line_width=0,
+)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+data_path2  = "Mental Health Data.csv"
+
+dfSTI = pd.read_csv(data_path2)
+
+dfSTI['Would you be willing to share with you friends and family that you have a mental illness?'] = dfSTI['How willing would you be to share with friends and family that you have a mental illness?'].astype('category').map({
+    "Somewhat open":"Probably",
+    "Very open":"Yes",
+    "Somewhat not open":"Probably not",
+    "Neutral":"Neutral",
+    "Not open at all":"No",
+    "Not applicable to me (I do not have a mental illness)":"N/A"
+})
+
+fig2 = px.sunburst(
+    dfSTI,
+    path=['Do you currently have a mental health disorder?', 'Would you be willing to share with you friends and family that you have a mental illness?'],
+    labels={'Do you currently have a mental health disorder?': 'Do you currently have a mental health disorder?'},
+    color='Do you currently have a mental health disorder?',
+    color_discrete_sequence=['rgb(213, 102, 100)', 'rgb(11, 20, 20)', 'rgb(102, 123, 0)'],
+    maxdepth=-1,
+    hover_data=['Do you currently have a mental health disorder?', 'Would you be willing to share with you friends and family that you have a mental illness?'],
+    branchvalues="remainder",
+)
+
+sizes = [35, 20, 20, 20, 50, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 50, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20]
+
+fig2.update_traces(
+    go.Sunburst(
+
+        hovertemplate = 
+            'Do you currently have a mental health disorder? : %{customdata[0]}' + 
+            '<br>Would you be willing to share with you friends and family that you have a mental illness? : %{customdata[1]}' + 
+            '<br>Count: %{value}'
+        # hoverinfo="none"
+    ),
+    insidetextfont = dict(size=sizes)
+)
+
+fig2.update_layout(
+    autosize=False,
+    width=1300,
+    height=800,
+)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+data_path3  = "people-with-mental-health-disorders copy.csv"
+
+df = pd.read_csv(data_path3)
 
 df2 = pd.read_csv('WPP2019_TotalPopulationBySex.csv')
 
@@ -289,7 +450,7 @@ df2['Code'] = df2['Location'].astype('category').map({
 
 df2["population"] = df2["PopTotal"] * 1000
 
-frames = []
+frames2 = []
 
 for theYear in [1990, 1991, 1992, 1993, 1994, 1995, 1996, 1997, 1998, 1999, 2000, 2001, 2002, 2003, 2004, 2005, 2006, 2007, 2008, 2009, 2010, 2011, 2012, 2013, 2014, 2015, 2016]:
     print(theYear)
@@ -303,82 +464,99 @@ for theYear in [1990, 1991, 1992, 1993, 1994, 1995, 1996, 1997, 1998, 1999, 2000
                 break
 
     yearlyDF["totalPop"] = blank
-    frames.append(yearlyDF)
+    frames2.append(yearlyDF)
 
 print("SUCCESS")
-result = pd.concat(frames)
-result["percentage"] = (result["Prevalence - Mental health disorders: Both (Number)"] / result["totalPop"]) * 100
-print(result.head())
+result2 = pd.concat(frames2)
+result2["percentage"] = (result2["Prevalence - Mental health disorders: Both (Number)"] / result2["totalPop"]) * 100
+print(result2.head())
 
-'''
-fig = go.Figure(data=go.Choropleth(
-    
-    locations = df['Code'],
-    z = df['Prevalence - Mental health disorders: Both (Number)'],
-    text = df['Entity'],
-    colorscale = [[0, '#D3394C'], [0.05, '#AF2D46'], [0.4, '#8B2444'], [0.6, '#722040'], [0.8, '#6A1C48'], [1, 'purple']],
-    autocolorscale=False,
-    reversescale=False,
-    zmax=100000000,
-    zmin=0,
-    marker_line_color='darkgray',
-    marker_line_width=0.5,
-    colorbar_ticksuffix = '',
-    colorbar_title = 'Amount of People',
-))
-#(data, x="Sex", y="2016", color="Country")#, range_y=[0, 8000000], color_continuous_scale=["blue", "green", "purple"])
 
-fig.update_layout(
-    geo=dict(
-        showframe=False,
-        showcoastlines=False,
-        projection_type='equirectangular'
-    ),
-    autosize=False,
-    width=1300,
-    height=800
 
-)
-'''
-app.layout = html.Div([
-    html.H1(
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+app.layout = html.Div(children=[
+    # All elements from the top of the page
+    html.Div([
+        html.H1(children='Hello Dash'),
+
+        html.Div(children='''
+            Dash: A web application framework for Python.
+        '''),
+
+        dcc.Graph(
+            id='graph1',
+            figure=fig
+        ),  
+    ]),
+    # New Div for all elements in the new 'row' of the page
+    html.Div([
+        html.H1(children='Hello Dash'),
+
+        html.Div(children='''
+            Dash: A web application framework for Python.
+        '''),
+
+        dcc.Graph(
+            id='graph2',
+            figure=fig2
+        ),  
+    ]),
+
+    html.Div([
+        html.H1(
         children='Mental Health Disorders by Location',
         style={
             'textAlign': 'center',
             'color': 'purple'
-        }
-    ),
-    dcc.Graph(id='graph-with-slider'),
-    dcc.Slider(
-        id='year-slider',
-        min=result['Year'].min(),
-        max=result['Year'].max(),
-        value=result['Year'].min(),
-        marks={str(year): str(year) for year in result['Year'].unique()},
-        step=None
-    ),
-
+            }
+        ),
+        dcc.Graph(id='graph-with-slider'),
+        dcc.Slider(
+            id='year-slider',
+            min=result2['Year'].min(),
+            max=result2['Year'].max(),
+            value=result2['Year'].min(),
+            marks={str(year): str(year) for year in result2['Year'].unique()},
+            step=None
+    ),  
+    ]),
 ])
 
-'''
-style={'backgroundColor': colors['background']}, children=[
 
-    html.Div(children='', style={
-        'textAlign': 'center',
-        'color': colors['text']
-    }),
 
-    dcc.Graph(
-        id='example-graph-2',
-        figure=fig
-    )
-'''
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 @app.callback(
     Output('graph-with-slider', 'figure'),
     Input('year-slider', 'value'))
 def update_figure(selected_year):
-    filtered_df = result[result['Year'] == selected_year]
+    filtered_df = result2[result2['Year'] == selected_year]
 
     # fig = px.scatter(filtered_df, x="gdpPercap", y="lifeExp",
     #                  size="pop", color="continent", hover_name="country",
@@ -386,7 +564,7 @@ def update_figure(selected_year):
 
     # fig.update_layout(transition_duration=500)
 
-    fig = go.Figure(data=go.Choropleth(
+    fig3 = go.Figure(data=go.Choropleth(
     
         locations = filtered_df['Code'],
         z = filtered_df['percentage'],
@@ -406,7 +584,7 @@ def update_figure(selected_year):
     ))
     #(data, x="Sex", y="2016", color="Country")#, range_y=[0, 8000000], color_continuous_scale=["blue", "green", "purple"])
 
-    fig.update_layout(
+    fig3.update_layout(
         geo=dict(
             showframe=False,
             showcoastlines=False,
@@ -420,7 +598,35 @@ def update_figure(selected_year):
     )
 
 
-    return fig
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 if __name__ == '__main__':
     app.run_server(debug=True)
+
+
+

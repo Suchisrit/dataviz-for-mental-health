@@ -89,11 +89,8 @@ fig.update_layout(
 #     hovertemplate=None)
 
 app.layout = html.Div(children=[
-    html.H1(children='Hello Dash'),
+    html.H1(children='Do you currently have a mental health disorder?'),
 
-    html.Div(children='''
-        Dash: A web application framework for Python.
-    '''),
 
     dcc.Graph(
         id='example-graph',
