@@ -515,7 +515,7 @@ app.layout = html.Div(children=[
             ),  
         ], className='viz-2'),
 
-        html.P(children='yeet 2', className="section-info"),
+        html.P(children='', className="section-info"),
     ], className='section'),
 
     html.Hr(className='transition-hr'),
