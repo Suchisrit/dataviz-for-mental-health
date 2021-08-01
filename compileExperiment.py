@@ -18,6 +18,12 @@ colors = {
 }
 
 
+###################################################
+#####         TECH SURVEY                      ####
+###################################################
+
+
+
 data_path  = "survey.csv"
 data = pd.read_csv(data_path)
 
@@ -46,7 +52,7 @@ result = pd.concat(frames)
 
 # data['Severity'] = data['work_interfere'].astype('category').map({"Never":0, "Rarely":1, "Sometimes":2, "Often":3})
 
-#fig = px.bar(data, x="Severity", color="treatment", range_x=[0, 3], )
+# fig = px.bar(data, x="Severity", color="treatment", range_x=[0, 3], )
 fig = px.bar(result, x="work_interfere", color="treatment", range_y=[0, 501], category_orders={"work_interfere":["Never", "Rarely", "Sometimes", "Often"], "treatment":["Yes", "No"]}, hover_name='percentage', color_discrete_sequence=["rgb(116, 1, 223)", "rgb(223, 1, 46)"], labels={"work_interfere": "Frequency of Negative Mental Health Condition Effects", "count": "Amount of People", "treatment": "Did the individual<br>seek treatment?"})
 '''
 x = data['work_interfere']
@@ -71,37 +77,9 @@ fig.update_traces(
 )
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+###########################################################
+######            SUNBURST CHART                     ######
+###########################################################
 
 
 data_path2  = "Mental Health Data.csv"
@@ -150,35 +128,9 @@ fig2.update_layout(
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+# ###########################################################
+# ######            MENTAL HEALTH MAP                  ######
+# ###########################################################
 
 
 
@@ -452,7 +404,7 @@ df2["population"] = df2["PopTotal"] * 1000
 
 frames2 = []
 
-for theYear in [1990, 1991, 1992, 1993, 1994, 1995, 1996, 1997, 1998, 1999, 2000, 2001, 2002, 2003, 2004, 2005, 2006, 2007, 2008, 2009, 2010, 2011, 2012, 2013, 2014, 2015, 2016]:
+for theYear in range(1990, 2017):
     print(theYear)
     blank = []
     yearlyDF = df[df['Year']==theYear]
@@ -473,17 +425,9 @@ print(result2.head())
 
 
 
-
-
-
-
-
-
-
-
-
-
-
+##################################################
+######           LAYOUT                     ###### 
+##################################################
 
 
 
@@ -536,20 +480,9 @@ app.layout = html.Div(children=[
 ])
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+########################################################
+######              CALLBACKS                   ########
+########################################################
 
 
 @app.callback(
@@ -557,12 +490,6 @@ app.layout = html.Div(children=[
     Input('year-slider', 'value'))
 def update_figure(selected_year):
     filtered_df = result2[result2['Year'] == selected_year]
-
-    # fig = px.scatter(filtered_df, x="gdpPercap", y="lifeExp",
-    #                  size="pop", color="continent", hover_name="country",
-    #                  log_x=True, size_max=55)
-
-    # fig.update_layout(transition_duration=500)
 
     fig3 = go.Figure(data=go.Choropleth(
     
@@ -594,33 +521,9 @@ def update_figure(selected_year):
         width=1300,
         height=800,
         transition_duration=1500,
-
     )
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+    return fig3
 
 
 
