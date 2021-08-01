@@ -1,4 +1,4 @@
-![Hero](https://github.com/antz22/montycsc-website/blob/master/screenshots/hero.png)
+![Hero](https://github.com/Suchisrit/dataviz-for-mental-health/blob/master/screenshots/hero.png)
 
 # Mental Health Visualized
 
