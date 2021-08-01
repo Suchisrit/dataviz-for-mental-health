@@ -56,7 +56,7 @@ fig = px.bar(
         "treatment":["Yes", "No"],
     }, 
     hover_name='percentage', 
-    color_discrete_sequence=["#004DA1", "#F5A627"], 
+    color_discrete_sequence=["#004DA1", "#2EBBAB"], 
     labels={"work_interfere": "Frequency of Negative Mental Health Condition Effects", "treatment": "Did the individual<br>seek treatment?"},
     hover_data=["work_interfere", "treatment", "percentage"],
 )
@@ -65,6 +65,8 @@ fig.update_layout(
     plot_bgcolor='white',
     # paper_bgcolor='#a9d5fd',
     barmode='stack',
+    xaxis_title="Frequency of Interference in Work",
+    yaxis_title="Count",
 )
 
 fig.update_traces(
@@ -124,7 +126,7 @@ fig2 = px.sunburst(
     dfSTI,
     path=['Do you currently have a mental health disorder?', 'Has your employer ever formally discussed mental health (for example, as part of a wellness campaign or other official communication)?'],
     color='Do you currently have a mental health disorder?',
-    color_discrete_sequence=['#004DA1', '#CEE5F6', '#F5A627'],
+    color_discrete_sequence=['#004DA1', '#2EBBAB', '#9FC4E8'],
     maxdepth=-1,
     hover_data=['Do you currently have a mental health disorder?', 'Has your employer ever formally discussed mental health (for example, as part of a wellness campaign or other official communication)?'],
     branchvalues="total",
@@ -143,6 +145,7 @@ fig2.update_traces(
 
 fig2.update_layout(
     margin=dict(t=40, r=0, l=0, b=0),
+    font_family="Lato",
 )
 
 
@@ -442,10 +445,11 @@ result2["percentage"] = (result2["Prevalence - Mental health disorders: Both (Nu
 
 
 image_directory = '/home/antz/vscode/Web/dataviz-for-mental-health/images/'
-list_of_images = [os.path.basename(x) for x in glob.glob('{}*.png'.format(image_directory))]
+list_of_images = [os.path.basename(x) for x in glob.glob('{}*.jpg'.format(image_directory))]
+# list_of_images = [os.path.basename(x) for x in glob.glob('{}*.png'.format(image_directory))]
 static_image_route = '/static/'
 
-image_filename = 'images/mental-health.png'
+image_filename = 'images/mental-health.jpg'
 encoded_image = base64.b64encode(open(image_filename, 'rb').read())
 
 
@@ -463,7 +467,7 @@ app.layout = html.Div(children=[
     ], className="hero"),
 
     html.Div([
-        html.P(children='With the pandemic looming overhead and Simone Biles\' Withdrawal from the Olympics, more attention is being drawn towards the issue of mental health in recent times'),
+        html.P(children='With the pandemic looming overhead and Simone Biles\' Withdrawal from the Olympics, more attention is being drawn towards the issue of mental health in recent times.'),
     ], className="transition-p"),
 
     html.Hr(className='transition-hr'),
@@ -471,13 +475,13 @@ app.layout = html.Div(children=[
     html.Div([
         html.Div([
             html.H2(children='The problem is that mental health isn\'t being treated enough as an illness or as a serious problem.', className="section-header"),
-            html.P(children='Take a second to think about the people that you see everyday, and the people you don’t see often. According to the National Alliance on Mental Illness, 20.6% of US adults experienced an illness related to mental health in 2019. This means that 1 in 5 of all US adults were experiencing mental health issues. Think again about the friends and loved ones you were thinking about.', className="section-info"),
+            html.P(children='Take a second to think about the people that you see everyday, and the people you don’t see often. According to the National Alliance on Mental Illness, 20.6% of US adults experienced an illness related to mental health in 2019. This means that 1 in 5 of all US adults were experiencing mental health issues.', className="section-info"),
         ]),
         html.Hr(className='transition-mini-hr'),
         html.P(children='Here\'s a look at our first visualization. This is a graph of the percentage of population with mental health disorders for every country.', className="section-info"),
 
         html.Div([
-            html.H5(children='Mental Health Disorders by Location'),
+            html.H5(children='Percentage of Population with Mental Health Disorders by Country'),
             dcc.Graph(id='graph-with-slider'),
             dcc.Slider(
                 id='year-slider',
@@ -496,15 +500,15 @@ app.layout = html.Div(children=[
 
     html.Div([
         html.Div([
-            html.H2(children='Header 2', className="section-header"),
-            html.P(children='Our next visualization utilizes survey data to take a closer look at the stigma surrounding mental health. The most common response tot he question blah', className="section-info"),
+            html.H2(children='Let\'s take a closer look at mental health in the workplace.', className="section-header"),
+            html.P(children='Our next visualization utilizes survey data to examine the stigma surrounding mental health. The most common response to, \'Do you currently have a mental health disorder?\' was \'Yes.\' Additionally, our visualization analyzes the responses to another question based on the response to the first question.', className="section-info"),
         ]),
         html.Hr(className='transition-mini-hr'),
         html.P(children='Click on the graph\'s responses to zoom in on a section of responses!', className="section-info"),
 
         html.Div([
             html.H5(children='Do you currently have a mental health disorder?'),
-            html.H6(children='Would you be willing to share with you friends and family that you have a mental illness?'),
+            html.P(children='Would you be willing to share with you friends and family that you have a mental illness?'),
             dcc.Graph(
                 id='graph2',
                 figure=fig2
@@ -519,20 +523,20 @@ app.layout = html.Div(children=[
     html.Div([
         html.Div([
             html.H2(children='Thankfully, some people are taking the care they need.', className="section-header"),
-            html.P(children='Take a look at this bar graph for people in teh tech industry seeking mental health treatment.', className="section-info"),
+            html.P(children='Take a look at this bar graph of survey responses, showing people in the tech industry seeking mental health treatment. The first question they were asked was \'If you have a mental health condition, do you feel that it interferes with your work?\' The second question they were asked was \'Did you seek treatment for your mental health condition?\'', className="section-info"),
         ]),
         html.Hr(className='transition-mini-hr'),
-        html.P(children='our last data visualization uses a (link) kaggle dataset on survey responses for mental health in the tech industry.', className="section-info"),
+        html.P(children='On the x axis is the response to the first question, and on the y axis is the number of responses. The labels of yes and no correspond to the responses of the second question. If you hover over the sections labeled Yes and No, you can see the percentages of respondents who answered Yes or No.', className="section-info"),
 
         html.Div([
-            html.H5(children='Frequency of Negative Mental Health Condition Effects'),
+            html.H5(children='Severity of Mental Health Condition Effects and Whether Treatment Was Sought'),
             dcc.Graph(
                 id='graph1',
                 figure=fig
             ),  
         ], className='viz-3'),
 
-        html.P(children='yeet 3', className="section-info"),
+        html.P(children='Stay safe and take care of your mental health!', className="section-info"),
     ], className='section'),
 ])
 
@@ -553,10 +557,12 @@ def update_figure(selected_year):
         locations = filtered_df['Code'],
         z = filtered_df['percentage'],
         text = ['Country: {} <br>Disorder Count: {} <br>Total Population: {}'.format(filtered_df["Entity"][i], int(filtered_df['Prevalence - Mental health disorders: Both (Number)'][i]), int(filtered_df['totalPop'][i])) for i in filtered_df.index],
-        colorscale = [[0, "#2262A7"], [0.4, "#2262A7"], [0.6, "#FDFC96"], [1, "#FDFC96"]],
+        colorscale = [[0, "#004DA1"], [0.4, "#004DA1"], [0.6, "#A6FFA6"], [1, "#A6FFA6"]],
+        # colorscale = [[0, "#004DA1"], [0.6, "#6D8B9C"], [0.75, "#BDC99C"], [1, "#FEFECB"]],
+        # colorscale = [[0, "#004DA1"], [0.4, "#004DA1"], [0.6, "#FEFECB"], [1, "#FEFECB"]],
         # colorscale = [[0, "#2262A7"], [0.3, "#729AA1"], [0.8, "#B4C99C"], [1, "#FDFC96"]],
         autocolorscale=False,
-        reversescale=False,
+        reversescale=True,
         zmax=26,
         zmin=0,
         marker_line_color='darkgray',

@@ -1,9 +1,10 @@
 @import url('https://fonts.googleapis.com/css2?family=Lato:wght@400;700&display=swap');
 
 body {
-    background-color: #a9d5fd;
+    /* background-color: #a9d5fd; */
+    background-color: #0B1940;
     font-family: 'Lato', sans-serif;
-    color: black;
+    color: white;
 }
 
 .header {
@@ -58,13 +59,13 @@ body {
 .transition-hr {
     width: 32em;
     height: 3px;
-    border-color: black;
+    border-color: white;
 }
 
 .transition-mini-hr {
     width: 6em;
     height: 3px;
-    border-color: black;
+    border-color: white;
 }
 
 .section {
@@ -93,6 +94,7 @@ body {
     border: 3px solid #cfcfcf; 
     padding: 2em;
     margin-bottom: 3em;
+    color: black;
 }
 
 
@@ -102,6 +104,7 @@ body {
     border: 3px solid #cfcfcf; 
     padding: 2em;
     margin-bottom: 3em;
+    color: black;
 }
 
 
@@ -111,4 +114,5 @@ body {
     border: 3px solid #cfcfcf; 
     padding: 2em;
     margin-bottom: 3em;
+    color: black;
 }
