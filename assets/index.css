@@ -15,23 +15,24 @@ body {
 }
 
 .hero_img {
-    width: 35em;
-    height: 35em;
+    width: 43em;
+    height: 43em;
 }
 
 .pre-bold-header {
-    font-size: 3em;
+    font-size: 3.3em;
     margin: 0;
 }
 
 .post-bold-header {
     font-weight: 800;
-    font-size: 3em;
+    font-size: 3.3em;
     margin: 0;
 }
 
 .left-side-hero {
     margin: auto;
+    padding-left: 3em;
     max-width: 17em;
 }
 
@@ -40,4 +41,71 @@ body {
     justify-content: space-between;
     margin-right: 5em;
     margin-left: 3em;
+}
+
+
+.transition-p > p {
+    max-width: 30em;
+    font-size: 1.5em;
+    line-height: 142.2%;
+    margin: 3em auto 7em auto;
+    text-align: center;
+}
+
+.transition-hr {
+    width: 32em;
+    height: 3px;
+    border-color: black;
+}
+
+.transition-mini-hr {
+    width: 6em;
+    height: 3px;
+    border-color: black;
+}
+
+.section {
+    text-align: center;
+    padding: 5em;
+}
+
+
+.section-header {
+    font-size: 2em;
+    font-weight: bold;
+    margin-bottom: 1.0em;
+}
+
+.section-info {
+    font-size: 1.2em;
+    line-height: 140%;
+    margin-bottom: 3em;
+}
+
+
+
+.viz-1 {
+    background-color: white;
+    border-radius: 16px;
+    border: 3px solid #cfcfcf; 
+    padding: 2em;
+    margin-bottom: 3em;
+}
+
+
+.viz-2 {
+    background-color: white;
+    border-radius: 16px;
+    border: 3px solid #cfcfcf; 
+    padding: 2em;
+    margin-bottom: 3em;
+}
+
+
+.viz-3 {
+    background-color: white;
+    border-radius: 16px;
+    border: 3px solid #cfcfcf; 
+    padding: 2em;
+    margin-bottom: 3em;
 }

@@ -5,17 +5,13 @@ from dash.dependencies import Input, Output
 import pandas as pd
 import plotly.express as px
 import plotly.graph_objects as go
+import base64
+import glob
+import os
 
 external_stylesheets = ['https://codepen.io/chriddyp/pen/bWLwgP.css']
 
 app = dash.Dash(__name__, external_stylesheets=external_stylesheets)
-
-# assume you have a "long-form" data frame
-# see https://plotly.com/python/px-arguments/ for more options
-colors = {
-    'background': '#47003e',
-    'text': '#df0170'
-}
 
 
 ###################################################
@@ -50,25 +46,11 @@ neverAll['percentage'] = neverAll['treatment'].astype('category').map({"Yes":"{}
 frames = [neverAll, rarelyAll, sometimesAll, oftenAll]
 result = pd.concat(frames)
 
-# data['Severity'] = data['work_interfere'].astype('category').map({"Never":0, "Rarely":1, "Sometimes":2, "Often":3})
-
-# fig = px.bar(data, x="Severity", color="treatment", range_x=[0, 3], )
-fig = px.bar(result, x="work_interfere", color="treatment", range_y=[0, 501], category_orders={"work_interfere":["Never", "Rarely", "Sometimes", "Often"], "treatment":["Yes", "No"]}, hover_name='percentage', color_discrete_sequence=["rgb(116, 1, 223)", "rgb(223, 1, 46)"], labels={"work_interfere": "Frequency of Negative Mental Health Condition Effects", "count": "Amount of People", "treatment": "Did the individual<br>seek treatment?"})
-'''
-x = data['work_interfere']
-
-
-fig = go.Figure(go.Bar(x=x, y=[len(often)], name='Yes'))
-fig.add_trace(go.Bar(x=x, y=data[data['treatment']=='No'], name='No'))
-
-fig.update_layout(barmode='stack')
-fig.update_xaxes(categoryorder='category ascending')
-'''
+fig = px.bar(result, x="work_interfere", color="treatment", range_y=[0, 501], category_orders={"work_interfere":["Never", "Rarely", "Sometimes", "Often"], "treatment":["Yes", "No"]}, hover_name='percentage', color_discrete_sequence=["#004DA1", "#F5A627"], labels={"work_interfere": "Frequency of Negative Mental Health Condition Effects", "count": "Amount of People", "treatment": "Did the individual<br>seek treatment?"})
 
 fig.update_layout(
-    plot_bgcolor=colors['background'],
-    paper_bgcolor=colors['background'],
-    font_color=colors['text'],
+    # plot_bgcolor='white',
+    # paper_bgcolor='white',
     barmode='stack',
 )
 
@@ -112,25 +94,23 @@ fig2.update_traces(
     go.Sunburst(
 
         hovertemplate = 
-            'Do you currently have a mental health disorder? : %{customdata[0]}' + 
-            '<br>Would you be willing to share with you friends and family that you have a mental illness? : %{customdata[1]}' + 
+            'Would you be willing to share with you friends and family that you have a mental illness? : %{customdata[1]}' + 
             '<br>Count: %{value}'
-        # hoverinfo="none"
     ),
     insidetextfont = dict(size=sizes)
 )
 
 fig2.update_layout(
     autosize=False,
-    width=1300,
-    height=800,
+    width=1000,
+    height=600,
 )
 
 
 
-# ###########################################################
-# ######            MENTAL HEALTH MAP                  ######
-# ###########################################################
+###########################################################
+######            MENTAL HEALTH MAP                  ######
+###########################################################
 
 
 
@@ -139,12 +119,6 @@ data_path3  = "people-with-mental-health-disorders copy.csv"
 df = pd.read_csv(data_path3)
 
 df2 = pd.read_csv('WPP2019_TotalPopulationBySex.csv')
-
-'''
-df2['Code'] = df2['Location'].astype('category').map({
-
-})
-'''
 
 
 df2['Code'] = df2['Location'].astype('category').map({
@@ -405,7 +379,6 @@ df2["population"] = df2["PopTotal"] * 1000
 frames2 = []
 
 for theYear in range(1990, 2017):
-    print(theYear)
     blank = []
     yearlyDF = df[df['Year']==theYear]
     yearlyDF2 = df2[df2['Time']==theYear]
@@ -421,7 +394,6 @@ for theYear in range(1990, 2017):
 print("SUCCESS")
 result2 = pd.concat(frames2)
 result2["percentage"] = (result2["Prevalence - Mental health disorders: Both (Number)"] / result2["totalPop"]) * 100
-print(result2.head())
 
 
 
@@ -430,53 +402,98 @@ print(result2.head())
 ##################################################
 
 
+image_directory = '/home/antz/vscode/Web/dataviz-for-mental-health/images/'
+list_of_images = [os.path.basename(x) for x in glob.glob('{}*.png'.format(image_directory))]
+static_image_route = '/static/'
+
+image_filename = 'images/mental-health.png'
+encoded_image = base64.b64encode(open(image_filename, 'rb').read())
+
 
 app.layout = html.Div(children=[
-    # All elements from the top of the page
-    html.Div([
-        html.H1(children='Hello Dash'),
 
-        html.Div(children='''
-            Dash: A web application framework for Python.
-        '''),
-
-        dcc.Graph(
-            id='graph1',
-            figure=fig
-        ),  
-    ]),
-    # New Div for all elements in the new 'row' of the page
-    html.Div([
-        html.H1(children='Hello Dash'),
-
-        html.Div(children='''
-            Dash: A web application framework for Python.
-        '''),
-
-        dcc.Graph(
-            id='graph2',
-            figure=fig2
-        ),  
-    ]),
+    html.H5(children='Data Viz for Mental Health', className="header"),
 
     html.Div([
-        html.H1(
-        children='Mental Health Disorders by Location',
-        style={
-            'textAlign': 'center',
-            'color': 'purple'
-            }
-        ),
-        dcc.Graph(id='graph-with-slider'),
-        dcc.Slider(
-            id='year-slider',
-            min=result2['Year'].min(),
-            max=result2['Year'].max(),
-            value=result2['Year'].min(),
-            marks={str(year): str(year) for year in result2['Year'].unique()},
-            step=None
-    ),  
-    ]),
+        html.Div([
+            html.H2(children='It\'s time to talk about', className="pre-bold-header"),
+            html.H2(children='mental health.', className="post-bold-header"),
+
+        ], className="left-side-hero"),
+        html.Img(src='data:image/png;base64,{}'.format(encoded_image.decode()), className='hero_img'),
+    ], className="hero"),
+
+    html.Div([
+        html.P(children='With the pandemic looming overhead and Simone Biles\' Withdrawal from the Olympics, more attention is being drawn towards the issue of mental health in recent times'),
+    ], className="transition-p"),
+
+    html.Hr(className='transition-hr'),
+
+    html.Div([
+        html.Div([
+            html.H2(children='The problem is that mental health isn\'t being treated enough as an illness or as a serious problem.', className="section-header"),
+            html.P(children='Take a second to think about the people that you see everyday, and the people you don’t see often. According to the National Alliance on Mental Illness, 20.6% of US adults experienced an illness related to mental health in 2019. This means that 1 in 5 of all US adults were experiencing mental health issues. Think again about the friends and loved ones you were thinking about.', className="section-info"),
+        ]),
+        html.Hr(className='transition-mini-hr'),
+        html.P(children='Here\'s a look at our first visualization. This is a graph of the percentage of population with mental health disorders for every country.', className="section-info"),
+
+        html.Div([
+            html.H5(children='Mental Health Disorders by Location'),
+            dcc.Graph(id='graph-with-slider'),
+            dcc.Slider(
+                id='year-slider',
+                min=result2['Year'].min(),
+                max=result2['Year'].max(),
+                value=result2['Year'].min(),
+                marks={str(year): str(year) for year in result2['Year'].unique()},
+                step=None
+            ),  
+        ], className='viz-1'),
+
+        html.P(children='It\'s getting worse every year - not enough efforts are being undertaken to fight mental health disorders and to treat mental health. Not enough awareness?', className="section-info"),
+    ], className='section'),
+
+    html.Hr(className='transition-hr'),
+
+    html.Div([
+        html.Div([
+            html.H2(children='Header 2', className="section-header"),
+            html.P(children='Our next visualization utilizes survey data to take a closer look at the stigma surrounding mental health. The most common response tot he question blah', className="section-info"),
+        ]),
+        html.Hr(className='transition-mini-hr'),
+        html.P(children='Yeet', className="section-info"),
+
+        html.Div([
+            html.H5(children='Do you currently have a mental health disorder?'),
+            dcc.Graph(
+                id='graph2',
+                figure=fig2
+            ),  
+        ], className='viz-2'),
+
+        html.P(children='yeet 2', className="section-info"),
+    ], className='section'),
+
+    html.Hr(className='transition-hr'),
+
+    html.Div([
+        html.Div([
+            html.H2(children='Thankfully, some people are taking the care they need.', className="section-header"),
+            html.P(children='Take a look at this bar graph for people in teh tech industry seeking mental health treatment.', className="section-info"),
+        ]),
+        html.Hr(className='transition-mini-hr'),
+        html.P(children='our last data visualization uses a (link) kaggle dataset on survey responses for mental health in the tech industry.', className="section-info"),
+
+        html.Div([
+            html.H5(children='Frequency of Negative Mental Health Condition Effects'),
+            dcc.Graph(
+                id='graph1',
+                figure=fig
+            ),  
+        ], className='viz-3'),
+
+        html.P(children='yeet 3', className="section-info"),
+    ], className='section'),
 ])
 
 
@@ -509,7 +526,6 @@ def update_figure(selected_year):
             '<b>%{z:.2f}%</b>' +
             '<br>%{text}'
     ))
-    #(data, x="Sex", y="2016", color="Country")#, range_y=[0, 8000000], color_continuous_scale=["blue", "green", "purple"])
 
     fig3.update_layout(
         geo=dict(
@@ -518,9 +534,10 @@ def update_figure(selected_year):
             projection_type='equirectangular'
         ),
         autosize=False,
-        width=1300,
-        height=800,
+        width=970,
+        height=500,
         transition_duration=1500,
+        margin=dict(t=0, r=0, l=0, b=0)
     )
 
     return fig3
