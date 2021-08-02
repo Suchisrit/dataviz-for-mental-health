@@ -45,8 +45,8 @@ Visualization 3 (bar graph)
 
 ## Screenshots
 
-![viz-1](https://github.com/Suchisrit/dataviz-for-mental-health/blob/master/screenshots/viz-1.png)
+![viz-1](https://github.com/Suchisrit/dataviz-for-mental-health/blob/master/screenshots/viz_1.png)
 
-![viz-2](https://github.com/Suchisrit/dataviz-for-mental-health/blob/master/screenshots/viz-2.png)
+![viz-2](https://github.com/Suchisrit/dataviz-for-mental-health/blob/master/screenshots/viz_2.png)
 
-![viz-3](https://github.com/Suchisrit/dataviz-for-mental-health/blob/master/screenshots/viz-3.png)
+![viz-3](https://github.com/Suchisrit/dataviz-for-mental-health/blob/master/screenshots/viz_3.png)
