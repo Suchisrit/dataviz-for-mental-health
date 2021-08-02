@@ -31,6 +31,18 @@ Do not underestimate the messiness of real world datasets.
     html5 
     css3 
 
+## Datasets
+Visualization 1 (chloropleth map)
+- [Our World in Data - Number of people with mental health disorders](https://ourworldindata.org/grapher/people-with-mental-health-disorders)
+- [World Countries with ISO3 Codes](https://raw.githubusercontent.com/plotly/datasets/master/2014_world_gdp_with_codes.csv)
+- [Population Division UN - World Population Prospects](https://population.un.org/wpp/Download/Standard/CSV/)
+
+Visualization 2 (sunburst chart)
+- [Kaggle - Mental Health Data](https://www.kaggle.com/ron2112/mental-health-data?select=Mental+Health+Data.csv)
+
+Visualization 3 (bar graph)
+- [Kaggle - Mental Health in Tech Survey](https://www.kaggle.com/osmi/mental-health-in-tech-survey)
+
 ## Screenshots
 
 ![viz-1](https://github.com/Suchisrit/dataviz-for-mental-health/blob/master/screenshots/viz-1.png)

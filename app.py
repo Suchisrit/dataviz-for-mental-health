@@ -160,7 +160,7 @@ data_path3  = "people-with-mental-health-disorders copy.csv"
 
 df = pd.read_csv(data_path3)
 
-df2 = pd.read_csv('random-stuff\\WPP2019_TotalPopulationBySex.csv')
+df2 = pd.read_csv('WPP2019_TotalPopulationBySex.csv')
 
 
 df2['Code'] = df2['Location'].astype('category').map({
@@ -491,6 +491,18 @@ app.layout = html.Div(children=[
                 marks={str(year): str(year) for year in result2['Year'].unique()},
                 step=None
             ),  
+            html.Br(),
+            html.Br(),
+            html.Div([
+                html.Span(
+                    children=[
+                        html.Span(children='Sources: '),
+                        html.A(children='Population Prospects (Population Division UN),', href='https://population.un.org/wpp/Download/Standard/CSV/'), 
+                        html.Span(children=' '),
+                        html.A(children='Mental Health Disorders (Our World in Data)', href='https://ourworldindata.org/grapher/people-with-mental-health-disorders'),
+                    ]
+                ),
+            ]),
         ], className='viz-1'),
 
         html.P(children='It\'s getting worse every year - not enough efforts are being undertaken to fight mental health disorders and to treat mental health. Not enough awareness?', className="section-info"),
@@ -513,6 +525,14 @@ app.layout = html.Div(children=[
                 id='graph2',
                 figure=fig2
             ),  
+            html.Br(),
+            html.Br(),
+            html.Span(
+                children=[
+                    html.Span(children='Source: '),
+                    html.A(children='Mental Health Data (Kaggle)', href='https://www.kaggle.com/ron2112/mental-health-data?select=Mental+Health+Data.csv'),
+                ]
+            )
         ], className='viz-2'),
 
         html.P(children='', className="section-info"),
@@ -534,6 +554,14 @@ app.layout = html.Div(children=[
                 id='graph1',
                 figure=fig
             ),  
+            html.Br(),
+            html.Br(),
+            html.Span(
+                children=[
+                    html.Span(children='Source: '),
+                    html.A(children='Mental Health in Tech Survey (Kaggle)', href='https://www.kaggle.com/osmi/mental-health-in-tech-survey'),
+                ]
+            )
         ], className='viz-3'),
 
         html.P(children='Stay safe and take care of your mental health!', className="section-info"),
