@@ -160,7 +160,7 @@ data_path3  = "people-with-mental-health-disorders copy.csv"
 
 df = pd.read_csv(data_path3)
 
-df2 = pd.read_csv('WPP2019_TotalPopulationBySex.csv')
+df2 = pd.read_csv('random-stuff\\WPP2019_TotalPopulationBySex.csv')
 
 
 df2['Code'] = df2['Location'].astype('category').map({
@@ -508,7 +508,7 @@ app.layout = html.Div(children=[
 
         html.Div([
             html.H5(children='Do you currently have a mental health disorder?'),
-            html.P(children='Would you be willing to share with you friends and family that you have a mental illness?'),
+            html.P(children='Has your employer ever formally discussed mental health (for example, as part of a wellness campaign or other official communication)?'),
             dcc.Graph(
                 id='graph2',
                 figure=fig2
